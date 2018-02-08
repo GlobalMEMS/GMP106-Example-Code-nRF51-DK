@@ -166,22 +166,19 @@ int main(void)
   /* Default is 1024, set to higher value for better resolution */
   s8Res = gmp106_set_P_OSR(GMP106_P_OSR_1024);
 
-  /* GMP106 set standby time */
-  /* Standby time interval between periodic data conversion */
-  s8Res = gmp106_set_standby_time(GMP106_STANDBY_TIME_938ms);
-
-  /* GMP106 set to continuous mode */
-  s8Res = gmp106_set_continuous_mode();
-
   /* set sea leve reference pressure */
   //If not set, use default 101325 Pa for pressure altitude calculation
   set_sea_level_pressure_base(100450.f);
 
   for(;;){
     
-    //Read P and T
-    s8Res = gmp106_read_P_T(&s32P, &s16T);      
-    printf("P, T(code)=%d, %d\r", s32P, s16T);
+    /* Measure P */
+    s8Res = gmp106_measure_P(&s32P);
+    printf("P(code)=%d\r", s32P);
+    
+    /* Mesaure T */
+    s8Res = gmp106_measure_T(&s16T);    
+    printf("T(code)=%d\r", s16T);
 		
     //Code to Pa and Celsius
     fP_Pa = GMP106_P_CODE_TO_PA(s32P);
